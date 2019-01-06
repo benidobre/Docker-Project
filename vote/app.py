@@ -5,9 +5,11 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "Cats")
-option_b = os.getenv('OPTION_B', "Dogs")
+option_a = [os.getenv('OPTION_A', "1"),os.getenv('OPTION_A', "0"),os.getenv('OPTION_A', "0")]
+option_b = [os.getenv('OPTION_B', "2"),os.getenv('OPTION_B', "1"),os.getenv('OPTION_B', "e")]
+question = [os.getenv('QUESTION', "1+1=?"),os.getenv('QUESTION', "0^0=?"),os.getenv('QUESTION', "ln1=?")]
 hostname = socket.gethostname()
+index = 0
 
 app = Flask(__name__)
 
@@ -24,16 +26,21 @@ def hello():
 
     vote = None
 
+    global index
     if request.method == 'POST':
         redis = get_redis()
         vote = request.form['vote']
-        data = json.dumps({'voter_id': voter_id, 'vote': vote})
+        question_vote = str(index)+":"+vote
+        data = json.dumps({'voter_id': voter_id, 'vote': question_vote})
         redis.rpush('votes', data)
+        if index < 2:
+			index = index + 1
 
     resp = make_response(render_template(
         'index.html',
-        option_a=option_a,
-        option_b=option_b,
+        option_a=option_a[index],
+        option_b=option_b[index],
+		question=question[index],
         hostname=hostname,
         vote=vote,
     ))
