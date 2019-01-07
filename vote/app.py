@@ -10,6 +10,7 @@ option_b = [os.getenv('OPTION_B', "2"),os.getenv('OPTION_B', "1"),os.getenv('OPT
 question = [os.getenv('QUESTION', "1+1=?"),os.getenv('QUESTION', "0^0=?"),os.getenv('QUESTION', "ln1=?")]
 hostname = socket.gethostname()
 index = 0
+answers = ""
 
 app = Flask(__name__)
 
@@ -27,12 +28,15 @@ def hello():
     vote = None
 
     global index
+    global answers
     if request.method == 'POST':
         redis = get_redis()
         vote = request.form['vote']
-        question_vote = str(index)+":"+vote
-        data = json.dumps({'voter_id': voter_id, 'vote': question_vote})
-        redis.rpush('votes', data)
+        if index <= 2:
+            answers = answers+vote
+        if index == 2:
+            data = json.dumps({'voter_id': voter_id, 'vote': answers})
+            redis.rpush('votes', data)
         if index < 2:
 			index = index + 1
 
