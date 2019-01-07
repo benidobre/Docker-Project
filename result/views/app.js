@@ -5,24 +5,29 @@ var bg1 = document.getElementById('background-stats-1');
 var bg2 = document.getElementById('background-stats-2');
 
 app.controller('statsCtrl', function($scope){
-  $scope.aPercent = 50;
+  $scope.aPercent = "bla";
   $scope.bPercent = 50;
 
   var updateScores = function(){
     socket.on('scores', function (json) {
        data = JSON.parse(json);
-       var a = parseInt(data.a || 0);
-       var b = parseInt(data.b || 0);
+       var votes = data.answers
+       var sorted = []
+       for(i=3; i >= 0; i--) {
+           votes.forEach(function (vote) {
+                if(vote["score"] == i) {
+                    sorted.push(vote);
+                }
+           }
+       }
 
-       var percentages = getPercentages(a, b);
-
-       bg1.style.width = percentages.a + "%";
-       bg2.style.width = percentages.b + "%";
+       bg1.style.width = 50 + "%";
+       bg2.style.width = 50 + "%";
+       var first = sorted[0]
 
        $scope.$apply(function () {
-         $scope.aPercent = percentages.a;
-         $scope.bPercent = percentages.b;
-         $scope.total = a + b;
+         $scope.aPercent = first["user"];
+         $scope.total = first["score"];
        });
     });
   };

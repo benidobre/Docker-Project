@@ -42,7 +42,7 @@ async.retry(
 );
 
 function getVotes(client) {
-  client.query('SELECT vote, COUNT(id) AS count FROM votes GROUP BY vote', [], function(err, result) {
+  client.query('SELECT vote, id FROM votes', [], function(err, result) {
     if (err) {
       console.error("Error performing query: " + err);
     } else {
@@ -55,10 +55,24 @@ function getVotes(client) {
 }
 
 function collectVotesFromResult(result) {
-  var votes = {a: 0, b: 0};
+  var votes = {};
+  votes["answers"] = []
 
   result.rows.forEach(function (row) {
-    votes[row.vote] = parseInt(row.count);
+    var score = 0;
+    if (row.vote[0] == 'b') {
+        score = score + 1;
+    }
+    if (row.vote[1] == 'b') {
+        score = score + 1;
+    }
+    if (row.vote[2] == 'a') {
+        score = score + 1;
+    }
+    var data = {};
+    data["user"] = row.id;
+    data["score"] = score;
+    votes["answers"].push(data);
   });
 
   return votes;
