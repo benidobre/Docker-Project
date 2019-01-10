@@ -18,7 +18,7 @@ app.controller('statsCtrl', function($scope){
                 if(vote["score"] == i) {
                     sorted.push(vote);
                 }
-           }
+           })
        }
 
        bg1.style.width = 50 + "%";
