@@ -23,11 +23,25 @@ app.controller('statsCtrl', function($scope){
 
        bg1.style.width = 50 + "%";
        bg2.style.width = 50 + "%";
-       var first = sorted[0]
+       
+      
+       var leaderboard = "no entries";
+       if(sorted.length > 0) {
+         var first = sorted[0]
+         leaderboard = "1. " + first["user"] + ": " + first["score"] + "   ";
+       }
+       if (sorted.length > 1) {
+         var second = sorted[1]
+         leaderboard += "2. " + second["user"] + ": " + second["score"] + "   ";
+       }
+       if (sorted.length > 2) {
+         var third = sorted[2]
+         leaderboard += "3. " + third["user"] + ": " + third["score"];
+       }
 
        $scope.$apply(function () {
-         $scope.aPercent = first["user"];
-         $scope.total = first["score"];
+         $scope.aPercent = leaderboard;
+         $scope.total = 0;
        });
     });
   };
