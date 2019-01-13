@@ -3,10 +3,13 @@ var socket = io.connect({transports:['polling']});
 
 var bg1 = document.getElementById('background-stats-1');
 var bg2 = document.getElementById('background-stats-2');
+var cookie = document.cookie;
 
 app.controller('statsCtrl', function($scope){
   $scope.aPercent = "bla";
-  $scope.bPercent = 50;
+  $scope.bPercent = "bla";
+  $scope.cPercent = "";
+  $scope.dPercent = "";
 
   var updateScores = function(){
     socket.on('scores', function (json) {
@@ -21,27 +24,43 @@ app.controller('statsCtrl', function($scope){
            })
        }
 
+       var parts = cookie.split('=');
+       var you = "no cookie";
+       if(parts.length > 1) {
+         var i = 1
+         sorted.forEach(function (vote) {
+                if(vote["user"] == parts[1]) {
+                    you = i+". YOU: " + vote["score"];
+                }
+                i++;
+           })
+       }
        bg1.style.width = 50 + "%";
        bg2.style.width = 50 + "%";
        
       
        var leaderboard = "no entries";
+       var snd = "";
+       var trd = "";
        if(sorted.length > 0) {
          var first = sorted[0]
-         leaderboard = "1. " + first["user"] + ": " + first["score"] + "   ";
+         leaderboard = "1. " + first["user"] + ": " + first["score"];
        }
        if (sorted.length > 1) {
          var second = sorted[1]
-         leaderboard += "2. " + second["user"] + ": " + second["score"] + "   ";
+         snd += "2. " + second["user"] + ": " + second["score"];
        }
        if (sorted.length > 2) {
          var third = sorted[2]
-         leaderboard += "3. " + third["user"] + ": " + third["score"];
+         trd += "3. " + third["user"] + ": " + third["score"];
        }
 
        $scope.$apply(function () {
          $scope.aPercent = leaderboard;
-         $scope.total = 0;
+         $scope.bPercent = you;
+         $scope.cPercent = snd;
+         $scope.dPercent = trd;
+         $scope.total = sorted.length;
        });
     });
   };

@@ -21,20 +21,20 @@
         <div id="choice">
           <div class="choice cats">
             <div class="label">TOP 3</div>
-            <div class="stat">{{aPercent}}</div>
+            <div class="stat">{{aPercent}}<br>{{cPercent}}<br>{{dPercent}}</div>
           </div>
           <div class="divider"></div>
           <div class="choice dogs">
             <div class="label">You</div>
-            <div class="stat">{{bPercent}}</div>
+            <div class="stat">{{bPercent}}<br><br><br></div>
           </div>
         </div>
       </div>
     </div>
     <div id="result">
-      <span ng-if="total == 0">No votes yet</span>
-      <span ng-if="total == 1">{{total}} vote</span>
-      <span ng-if="total >= 2">{{total}} votes</span>
+      <span ng-if="total == 0">No responders yet</span>
+      <span ng-if="total == 1">{{total}} responder</span>
+      <span ng-if="total >= 2">{{total}} responders</span>
     </div>
     <script src="socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
